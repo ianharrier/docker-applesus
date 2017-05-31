@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+    reposado:
+        build:
+            context: ./images/reposado
+        image: ianharrier/reposado
+        restart: unless-stopped
+        environment:
+            - BASE_URL=${REPOSADO_BASE_URL}
+            - CRON_EXP=${REPOSADO_CRON_EXP}
+            - TIMEZONE=${TIMEZONE}
+        volumes:
+            - ./volumes/reposado/html:/srv/reposado/html
+            - ./volumes/reposado/metadata:/srv/reposado/metadata
+    web:
+        image: httpd:alpine
+        restart: unless-stopped
+        ports:
+            - ${WEB_PORT}:80
+        volumes:
+            - ./volumes/reposado/html:/usr/local/apache2/htdocs
+    margarita:
+        build:
+            context: ./images/margarita
+        image: ianharrier/margarita
+        restart: unless-stopped
+        ports:
+            - ${MARGARITA_PORT}:8089
+        environment:
+            - BASE_URL=${REPOSADO_BASE_URL}
+            - TIMEZONE=${TIMEZONE}
+        volumes:
+            - ./volumes/reposado/html:/srv/reposado/html
+            - ./volumes/reposado/metadata:/srv/reposado/metadata
