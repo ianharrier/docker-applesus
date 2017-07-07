@@ -1,14 +1,30 @@
-FROM alpine:3.6
+FROM ubuntu:16.04
 
 MAINTAINER Ian Harrier <github@harrier.us>
+
+#-------------------------------------------------------------------------------
+#  Apache
+#-------------------------------------------------------------------------------
+
+RUN set -ex \
+        && apt-get update && apt-get -y install \
+               apache2 \
+        && sed -i 's/^ServerTokens .*/ServerTokens Prod/g' /etc/apache2/conf-available/security.conf \
+        && sed -i 's/^ServerSignature .*/ServerSignature Off/g' /etc/apache2/conf-available/security.conf \
+        && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+        && ln -sf /dev/stdout /var/log/apache2/access.log \
+        && ln -sf /dev/stderr /var/log/apache2/error.log \
+        && rm -rf /var/lib/apt/lists/*
 
 #-------------------------------------------------------------------------------
 #  Python
 #-------------------------------------------------------------------------------
 
 RUN set -ex \
-        && apk --no-cache add \
-               python2
+        && apt-get update && apt-get -y install \
+               libapache2-mod-wsgi \
+               python \
+        && rm -rf /var/lib/apt/lists/*
 
 #-------------------------------------------------------------------------------
 #  Margarita (https://github.com/jessepeterson/margarita)
@@ -17,31 +33,31 @@ RUN set -ex \
 WORKDIR /usr/local/margarita
 
 RUN set -ex \
-        && apk --no-cache add \
+        && apt-get update && apt-get -y install \
                git \
-               py2-pip \
+               python-pip \
         && git clone https://github.com/jessepeterson/margarita.git . \
         && pip install flask \
         && git clone https://github.com/wdas/reposado.git /usr/local/reposado \
         && cp -R /usr/local/reposado/code/reposadolib reposadolib \
         && rm -rf /usr/local/reposado \
-        && apk --no-cache del \
+        && a2enmod rewrite ldap authnz_ldap \
+        && apt-get -y purge --auto-remove \
                git \
-               py2-pip
+               python-pip \
+        && rm -rf /var/lib/apt/lists/*
 
 COPY preferences.plist ./preferences.plist
+COPY margarita.wsgi ./margarita.wsgi
+COPY margarita.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 8089
+EXPOSE 80
 
-CMD ["python","margarita.py"]
+CMD ["/usr/sbin/apachectl","-f","/etc/apache2/apache2.conf","-D","FOREGROUND"]
 
 #-------------------------------------------------------------------------------
 #  Scripts
 #-------------------------------------------------------------------------------
-
-RUN set -ex \
-        && apk --no-cache add \
-               tzdata
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 

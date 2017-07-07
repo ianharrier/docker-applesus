@@ -19,8 +19,5 @@ if [ "$(cat ./code/preferences.plist | grep URL_BASE_CHANGE_ME)" ]; then
     fi
 fi
 
-echo "[I] Performing initial Reposado synchronization."
-./code/repo_sync
-
 echo "[I] Entrypoint tasks complete. Starting crond."
 exec "$@"
