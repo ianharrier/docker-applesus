@@ -13,8 +13,9 @@ fi
 if [ "$(cat ./code/preferences.plist | grep URL_BASE_CHANGE_ME)" ]; then
     if [ "$URL_BASE" ]; then
         echo "[I] Setting the URL base."
-        sed -i "s/URL_BASE_CHANGE_ME/$URL_BASE/g"
+        sed -i "s/URL_BASE_CHANGE_ME/$URL_BASE/g" ./code/preferences.plist
     else
+        echo "[I] Setting an empty URL base."
         sed -i "s/URL_BASE_CHANGE_ME//g" ./code/preferences.plist
     fi
 fi
