@@ -67,6 +67,8 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 
     ```shell
     sudo docker-compose exec sync /usr/local/reposado/code/repo_sync
+    sudo docker-compose exec sync chmod -R 774 /srv/reposado/html /srv/reposado/metadata
+    sudo docker-compose exec sync chgrp -R apache /srv/reposado/html /srv/reposado/metadata
     ```
 
 2. Navigate to the admin console at `http://<Docker-host-IP>:80/admin` (or whatever port you specified in the `.env` file).

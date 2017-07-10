@@ -2,7 +2,7 @@
 set -e
 
 echo "[I] Creating cron job."
-echo "$CRON_EXP /usr/local/reposado/code/repo_sync" > /var/spool/cron/crontabs/root
+echo "$CRON_EXP /usr/local/reposado/code/repo_sync && chmod -R 774 /srv/reposado/html /srv/reposado/metadata && chgrp -R apache /srv/reposado/html /srv/reposado/metadata" > /var/spool/cron/crontabs/root
 
 if [ "$TIMEZONE" ]; then
     echo "[I] Setting the time zone."
