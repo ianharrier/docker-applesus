@@ -51,6 +51,9 @@ COPY preferences.plist ./preferences.plist
 COPY margarita.wsgi ./margarita.wsgi
 COPY margarita.conf /etc/apache2/sites-available/000-default.conf
 
+RUN set -ex \
+        && chmod +r ./margarita.wsgi
+
 EXPOSE 80
 
 CMD ["/usr/sbin/apachectl","-f","/etc/apache2/apache2.conf","-D","FOREGROUND"]
