@@ -55,7 +55,7 @@ COPY margarita.wsgi ./margarita.wsgi
 COPY margarita.conf /etc/apache2/sites-available/000-default.conf
 
 RUN set -ex \
-        && chmod +r ./margarita.wsgi
+        && chmod -R +r .
 
 EXPOSE 80
 
