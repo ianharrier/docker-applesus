@@ -42,6 +42,9 @@ RUN set -ex \
         && cp -R /usr/local/reposado/code/reposadolib reposadolib \
         && rm -rf /usr/local/reposado \
         && a2enmod rewrite ldap authnz_ldap \
+        && mkdir -p /srv/reposado/html /srv/reposado/metadata \
+        && chgrp -R www-data /srv/reposado/html /srv/reposado/metadata \
+        && chmod -R 775 /srv/reposado/html /srv/reposado/metadata \
         && apt-get -y purge --auto-remove \
                git \
                python-pip \
