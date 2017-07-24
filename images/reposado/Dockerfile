@@ -14,6 +14,8 @@ RUN set -ex \
 #  Reposado (https://github.com/wdas/reposado)
 #-------------------------------------------------------------------------------
 
+ARG REPOSADO_VERSION
+
 WORKDIR /usr/local/reposado
 
 RUN set -ex \
@@ -21,6 +23,7 @@ RUN set -ex \
                curl \
                git \
         && git clone https://github.com/wdas/reposado.git . \
+        && git checkout ${REPOSADO_VERSION} \
         && mkdir -p /srv/reposado/html /srv/reposado/metadata \
         && chgrp -R 33 /srv/reposado/html /srv/reposado/metadata \
         && chmod -R 775 /srv/reposado/html /srv/reposado/metadata \

@@ -77,8 +77,6 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 
 ### Upgrading
 
-*Note: neither Reposado nor Margarita publish 'releases' on GitHub, so these instructions simply delete the current images and build new ones, effectively pulling any changes from the two upstream repositories.*
-
 1. Set the working directory to the root of the repo.
 
     ```shell
@@ -115,20 +113,13 @@ This is more than just an Apple SUS image. Included in this repo is everything y
     sudo vi .env
     ```
 
-7. Delete the current images.
-
-    ```shell
-    sudo docker rmi ianharrier/reposado
-    sudo docker rmi ianharrier/margarita
-    ```
-
-8. Start Apple SUS in the background.
+7. Start Apple SUS in the background.
 
     ```shell
     sudo docker-compose up -d
     ```
 
-9. When all is confirmed working, remove the the `.env.old` file.
+8. When all is confirmed working, remove the the `.env.old` file.
 
     ```shell
     sudo rm backups/.env.old

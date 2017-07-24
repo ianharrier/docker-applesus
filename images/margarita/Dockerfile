@@ -30,6 +30,9 @@ RUN set -ex \
 #  Margarita (https://github.com/jessepeterson/margarita)
 #-------------------------------------------------------------------------------
 
+ARG REPOSADO_VERSION
+ARG MARGARITA_VERSION
+
 WORKDIR /usr/local/margarita
 
 RUN set -ex \
@@ -37,8 +40,10 @@ RUN set -ex \
                git \
                python-pip \
         && git clone https://github.com/jessepeterson/margarita.git . \
+        && git checkout ${MARGARITA_VERSION} \
         && pip install flask \
         && git clone https://github.com/wdas/reposado.git /usr/local/reposado \
+        && git -C /usr/local/reposado checkout ${REPOSADO_VERSION} \
         && cp -R /usr/local/reposado/code/reposadolib reposadolib \
         && rm -rf /usr/local/reposado \
         && a2enmod rewrite ldap authnz_ldap \
