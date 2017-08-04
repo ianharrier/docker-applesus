@@ -21,6 +21,8 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 
 ## How-to guides
 
+*Note: some of the commands in these guides may require root access to your system. If that is the case, either run the commands while logged in to the root account, or simulate a login to the root account using `sudo -i`. Due to the way environment variables are passed on some systems, typing `sudo` before each command is __not__ a supported method of running the commands in these guides with root access.*
+
 ### Installing
 
 1. Ensure the following are installed on your system:
@@ -32,7 +34,7 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 2. Clone this repo to a location on your system. *Note: in all of the guides on this page, it is assumed the repo is cloned to `/srv/docker/applesus`.*
 
     ```shell
-    sudo git clone https://github.com/ianharrier/docker-applesus.git /srv/docker/applesus
+    git clone https://github.com/ianharrier/docker-applesus.git /srv/docker/applesus
     ```
 
 3. Set the working directory to the root of the repo.
@@ -44,19 +46,19 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 4. Create the `.env` file using `.env.template` as a template.
 
     ```shell
-    sudo cp .env.template .env
+    cp .env.template .env
     ```
 
 5. Using a text editor, read the comments in the `.env` file, and make modifications to suit your environment.
 
     ```shell
-    sudo vi .env
+    vi .env
     ```
 
 6. Start Apple SUS in the background.
 
     ```shell
-    sudo docker-compose up -d
+    docker-compose up -d
     ```
 
 ### Using Apple SUS
@@ -66,7 +68,7 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 1. Optionally, the first time you use Apple SUS, you can force a synchronization instead of waiting for the first scheduled synchronization to occur.
 
     ```shell
-    sudo docker-compose exec sync reposado-sync
+    docker-compose exec sync reposado-sync
     ```
 
 2. Navigate to the admin console at `http://<Docker-host-IP>:80/admin` (or whatever port you specified in the `.env` file).
@@ -86,43 +88,43 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 2. Remove the current application stack.
 
     ```shell
-    sudo docker-compose down
+    docker-compose down
     ```
 
 3. Pull any changes from the repo.
 
     ```shell
-    sudo git pull
+    git pull
     ```
 
 4. Backup the `.env` file.
 
     ```shell
-    sudo mv .env backups/.env.old
+    mv .env backups/.env.old
     ```
 
 5. Create a new `.env` file using `.env.template` as a template.
 
     ```shell
-    sudo cp .env.template .env
+    cp .env.template .env
     ```
 
 6. Using a text editor, modify the new `.env` file.
 
     ```shell
-    sudo vi .env
+    vi .env
     ```
 
 7. Start Apple SUS in the background.
 
     ```shell
-    sudo docker-compose up -d
+    docker-compose up -d
     ```
 
 8. When all is confirmed working, remove the the `.env.old` file.
 
     ```shell
-    sudo rm backups/.env.old
+    rm backups/.env.old
     ```
 
 ### Running a one-time manual backup
@@ -136,7 +138,7 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 2. Run the backup script.
 
     ```shell
-    sudo docker-compose exec backup app-backup
+    docker-compose exec backup app-backup
     ```
 
 ### Restoring from a backup
@@ -152,7 +154,7 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 2. Make sure the **backup** container is running. *Note: if the container is already running, you can skip this step, but it will not hurt to run it anyway.*
 
     ```shell
-    sudo docker-compose up -d backup
+    docker-compose up -d backup
     ```
 
 3. List the available files in the `backups` directory.
@@ -164,13 +166,13 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 4. Specify a file to restore in the following format:
 
     ```shell
-    sudo docker-compose exec backup app-restore <backup-file-name>
+    docker-compose exec backup app-restore <backup-file-name>
     ```
 
     For example:
 
     ```shell
-    sudo docker-compose exec backup app-restore 20170501T031500+0000.tar.gz
+    docker-compose exec backup app-restore 20170501T031500+0000.tar.gz
     ```
 
 ### Uninstalling
@@ -184,11 +186,11 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 2. Remove the application stack.
 
     ```shell
-    sudo docker-compose down
+    docker-compose down
     ```
 
 3. Delete the repo. **Warning: this step is optional. If you delete the repo, all of your Apple SUS data, including backups, will be lost.**
 
     ```shell
-    sudo rm -rf /srv/docker/applesus
+    rm -rf /srv/docker/applesus
     ```
