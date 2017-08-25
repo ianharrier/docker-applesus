@@ -2,3 +2,4 @@ backups
 volumes/reposado/html
 volumes/reposado/metadata
 .env
+.env.bak
