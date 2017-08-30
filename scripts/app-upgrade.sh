@@ -25,11 +25,11 @@ echo "=== Updating environment file. ===========================================
 OLD_REPOSADO_VERSION=$(grep ^REPOSADO_VERSION= .env | cut -d = -f 2)
 NEW_REPOSADO_VERSION=$(grep ^REPOSADO_VERSION= .env.template | cut -d = -f 2)
 echo "[I] Upgrading Reposado from '$OLD_REPOSADO_VERSION' to '$NEW_REPOSADO_VERSION'."
-sed -i .bak "s/^REPOSADO_VERSION=.*/REPOSADO_VERSION=$NEW_REPOSADO_VERSION/g" .env
+sed -i.bak "s/^REPOSADO_VERSION=.*/REPOSADO_VERSION=$NEW_REPOSADO_VERSION/g" .env
 OLD_MARGARITA_VERSION=$(grep ^MARGARITA_VERSION= .env | cut -d = -f 2)
 NEW_MARGARITA_VERSION=$(grep ^MARGARITA_VERSION= .env.template | cut -d = -f 2)
 echo "[I] Upgrading Margarita from '$OLD_MARGARITA_VERSION' to '$NEW_MARGARITA_VERSION'."
-sed -i .bak "s/^MARGARITA_VERSION=.*/MARGARITA_VERSION=$NEW_MARGARITA_VERSION/g" .env
+sed -i.bak "s/^MARGARITA_VERSION=.*/MARGARITA_VERSION=$NEW_MARGARITA_VERSION/g" .env
 
 echo "=== Building new images. ======================================================="
 docker-compose build --pull
