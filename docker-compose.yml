@@ -39,9 +39,9 @@ services:
         build:
             context: ./images/backup
             args:
-                - GLIBC_VERSION=2.25-r0
-                - COMPOSE_VERSION=1.15.0
-        image: ianharrier/applesus-backup:1.0.7
+                - GLIBC_VERSION=2.26-r0
+                - COMPOSE_VERSION=1.16.1
+        image: ianharrier/applesus-backup:1.0.8
         restart: unless-stopped
         environment:
             - OPERATION=${BACKUP_OPERATION}
