@@ -31,6 +31,12 @@ NEW_MARGARITA_VERSION=$(grep ^MARGARITA_VERSION= .env.template | cut -d = -f 2)
 echo "[I] Upgrading Margarita from '$OLD_MARGARITA_VERSION' to '$NEW_MARGARITA_VERSION'."
 sed -i.bak "s/^MARGARITA_VERSION=.*/MARGARITA_VERSION=$NEW_MARGARITA_VERSION/g" .env
 
+echo "=== Deleting old images. ======================================================="
+IMAGE_BACKUP=$(docker images ianharrier/applesus-backup -q)
+IMAGE_SYNC=$(docker images ianharrier/reposado -q)
+IMAGE_WEB=$(docker images ianharrier/margarita -q)
+docker rmi $IMAGE_BACKUP $IMAGE_SYNC $IMAGE_WEB
+
 echo "=== Building new images. ======================================================="
 docker-compose build --pull
 
