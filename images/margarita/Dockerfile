@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:9
 
 MAINTAINER Ian Harrier <github@harrier.us>
 
