@@ -41,10 +41,12 @@ RUN set -ex \
                tzdata
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY reposado-purge.sh /usr/local/bin/reposado-purge
 COPY reposado-sync.sh /usr/local/bin/reposado-sync
 
 RUN set -ex \
         && chmod +x /usr/local/bin/docker-entrypoint \
+        && chmod +x /usr/local/bin/reposado-purge \
         && chmod +x /usr/local/bin/reposado-sync
 
 CMD ["crond","-f","-L","/dev/stdout"]

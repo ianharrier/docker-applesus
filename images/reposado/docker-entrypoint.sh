@@ -1,8 +1,13 @@
 #!/bin/sh
 set -e
 
-echo "[I] Creating cron job."
-echo "$CRON_EXP /usr/local/bin/reposado-sync" > /var/spool/cron/crontabs/root
+echo "[I] Creating sync cron job."
+echo "$SYNC_CRON_EXP /usr/local/bin/reposado-sync" > /var/spool/cron/crontabs/root
+
+if [ "$PURGE_OPERATION" = "purge" ]; then
+    echo "[I] Creating purge cron job."
+    echo "$PURGE_CRON_EXP /usr/local/bin/reposado-purge" >> /var/spool/cron/crontabs/root
+fi
 
 if [ "$TIMEZONE" ]; then
     echo "[I] Setting the time zone."

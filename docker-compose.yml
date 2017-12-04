@@ -30,7 +30,9 @@ services:
         restart: unless-stopped
         environment:
             - BASE_URL=${WEB_BASE_URL}
-            - CRON_EXP=${SYNC_CRON_EXP}
+            - SYNC_CRON_EXP=${SYNC_CRON_EXP}
+            - PURGE_OPERATION=${PURGE_OPERATION}
+            - PURGE_CRON_EXP=${PURGE_CRON_EXP}
             - TIMEZONE=${TIMEZONE}
         volumes:
             - ./volumes/reposado/html:/srv/reposado/html
