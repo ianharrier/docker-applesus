@@ -1,16 +1,6 @@
 #!/bin/sh
 set -e
 
-if [ "$(cat ./preferences.plist | grep URL_BASE_CHANGE_ME)" ]; then
-    if [ "$URL_BASE" ]; then
-        echo "[I] Setting the URL base."
-        sed -i "s/URL_BASE_CHANGE_ME/$URL_BASE/g" ./preferences.plist
-    else
-        echo "[I] Setting an empty URL base."
-        sed -i "s/URL_BASE_CHANGE_ME//g" ./preferences.plist
-    fi
-fi
-
 CONFIG_FILE='/etc/apache2/sites-available/000-default.conf'
 if [ "$(cat $CONFIG_FILE | grep AUTH_INCOMPLETE)" ]; then
     if [ "$AUTH_TYPE" = 'ad' ]; then
@@ -29,6 +19,16 @@ if [ "$(cat $CONFIG_FILE | grep AUTH_INCOMPLETE)" ]; then
         sed -i '/END_NO_AUTH/d' $CONFIG_FILE
     fi
     sed -i '/AUTH_INCOMPLETE/d' $CONFIG_FILE
+fi
+
+if [ "$(cat ./preferences.plist | grep URL_BASE_CHANGE_ME)" ]; then
+    if [ "$URL_BASE" ]; then
+        echo "[I] Setting the URL base."
+        sed -i "s/URL_BASE_CHANGE_ME/$URL_BASE/g" ./preferences.plist
+    else
+        echo "[I] Setting an empty URL base."
+        sed -i "s/URL_BASE_CHANGE_ME//g" ./preferences.plist
+    fi
 fi
 
 echo "[I] Entrypoint tasks complete. Starting Margarita."
