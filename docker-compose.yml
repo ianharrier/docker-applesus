@@ -19,8 +19,8 @@ services:
             - AUTH_AD_BIND_PASSWORD=${AUTH_AD_BIND_PASSWORD}
             - AUTH_AD_ALLOWED_GROUP_DN=${AUTH_AD_ALLOWED_GROUP_DN}
         volumes:
-            - ./volumes/reposado/html:/srv/reposado/html
-            - ./volumes/reposado/metadata:/srv/reposado/metadata
+            - ./volumes/reposado/html:/srv/reposado/html:z
+            - ./volumes/reposado/metadata:/srv/reposado/metadata:z
     sync:
         build:
             context: ./images/reposado
@@ -35,8 +35,8 @@ services:
             - PURGE_CRON_EXP=${PURGE_CRON_EXP}
             - TIMEZONE=${TIMEZONE}
         volumes:
-            - ./volumes/reposado/html:/srv/reposado/html
-            - ./volumes/reposado/metadata:/srv/reposado/metadata
+            - ./volumes/reposado/html:/srv/reposado/html:z
+            - ./volumes/reposado/metadata:/srv/reposado/metadata:z
     backup:
         build:
             context: ./images/backup
@@ -55,3 +55,5 @@ services:
         volumes:
             - ./:${PWD}
             - /var/run/docker.sock:/var/run/docker.sock
+        security_opt:
+            - label:disable
