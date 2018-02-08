@@ -43,7 +43,7 @@ services:
             args:
                 - GLIBC_VERSION=2.27-r0
                 - COMPOSE_VERSION=1.19.0
-        image: ianharrier/applesus-backup:1.0.10
+        image: ianharrier/applesus-backup:1.0.11
         restart: unless-stopped
         environment:
             - OPERATION=${BACKUP_OPERATION}
