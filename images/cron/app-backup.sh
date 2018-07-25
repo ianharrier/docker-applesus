@@ -6,7 +6,7 @@ START_TIME=$(date +%s)
 
 cd "$HOST_PATH"
 
-if [ "$OPERATION" = "disable" ]; then
+if [ "$BACKUP_OPERATION" = "disable" ]; then
     echo "[W] Backups are disabled."
 else
     if [ ! -d backups ]; then
@@ -34,7 +34,7 @@ else
     echo "[I] Removing working directory."
     rm -rf backups/tmp_backup
 
-    EXPIRED_BACKUPS=$(ls -1tr backups/*.tar.gz 2>/dev/null | head -n -$RETENTION)
+    EXPIRED_BACKUPS=$(ls -1tr backups/*.tar.gz 2>/dev/null | head -n -$BACKUP_RETENTION)
     if [ "$EXPIRED_BACKUPS" ]; then
         echo "[I] Cleaning up expired backup(s):"
         for BACKUP in $EXPIRED_BACKUPS; do

@@ -3,11 +3,15 @@ set -e
 
 START_TIME=$(date +%s)
 
-cd "$HOST_PATH"
+if [ ! -d .git ]; then
+    echo "[E] This script needs to run from the top directory of the repo. Current working directory:"
+    echo "      $(pwd)"
+    exit 1
+fi
 
 if [ ! $1 ]; then
     echo "[E] Specify the name of a backup file to restore. Example:"
-    echo "      docker-compose exec backup app-restore 20170501T031500+0000.tar.gz"
+    echo "      $0 20170501T031500+0000.tar.gz"
     exit 1
 fi
 
@@ -26,13 +30,8 @@ BACKUP_FILE="$1"
 echo "[I] Creating working directory."
 mkdir -p backups/tmp_restore
 
-echo "[I] Shutting down and removing web container."
-docker-compose stop web &>/dev/null
-docker-compose rm --force web &>/dev/null
-
-echo "[I] Shutting down and removing sync container."
-docker-compose stop sync &>/dev/null
-docker-compose rm --force sync &>/dev/null
+echo "[I] Shutting down and removing application stack."
+docker-compose down &>/dev/null
 
 echo "[I] Removing Reposado persistent data."
 rm -rf volumes/reposado/html volumes/reposado/metadata
@@ -50,11 +49,8 @@ mv backups/tmp_restore/html volumes/reposado/html/
 echo "[I] Restoring Reposado metadata."
 mv backups/tmp_restore/metadata volumes/reposado/metadata/
 
-echo "[I] Creating and starting sync container."
-docker-compose up -d sync &>/dev/null
-
-echo "[I] Creating and starting web container."
-docker-compose up -d web &>/dev/null
+echo "[I] Creating and starting application stack."
+docker-compose up -d &>/dev/null
 
 echo "[I] Removing working directory."
 rm -rf backups/tmp_restore
