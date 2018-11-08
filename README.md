@@ -85,7 +85,7 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 1. Set the working directory to the root of the repo.
 
     ```shell
-    cd /srv/docker/jira
+    cd /srv/docker/applesus
     ```
 
 2. Run the upgrade script.
