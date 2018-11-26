@@ -37,10 +37,8 @@ echo "[I] Upgrading Margarita from '$OLD_MARGARITA_VERSION' to '$NEW_MARGARITA_V
 sed -i.bak -e "s/^REPOSADO_VERSION=.*/REPOSADO_VERSION=$NEW_REPOSADO_VERSION/g" -e "s/^MARGARITA_VERSION=.*/MARGARITA_VERSION=$NEW_MARGARITA_VERSION/g" .env
 
 echo "=== Deleting old images. ======================================================="
-IMAGE_CRON=$(docker images ianharrier/applesus-cron -q)
-IMAGE_SYNC=$(docker images ianharrier/reposado -q)
-IMAGE_WEB=$(docker images ianharrier/margarita -q)
-docker rmi $IMAGE_CRON $IMAGE_SYNC $IMAGE_WEB
+IMAGE_WEB=$(docker images ianharrier/applesus -q)
+docker rmi $IMAGE_WEB
 
 echo "=== Building new images. ======================================================="
 docker-compose build --pull --no-cache
