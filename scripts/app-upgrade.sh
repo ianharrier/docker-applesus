@@ -41,7 +41,7 @@ IMAGE_WEB=$(docker images ianharrier/applesus -q)
 docker rmi $IMAGE_WEB
 
 echo "=== Building new images. ======================================================="
-docker-compose build --pull --no-cache
+docker-compose build --pull --no-cache web
 
 echo "=== Restoring application stack to most recent backup. ========================="
 cd backups
