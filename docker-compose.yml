@@ -3,12 +3,13 @@ version: '2'
 services:
     web:
         build:
-            context: ./images/margarita
+            context: ./images/applesus
             args:
                 - REPOSADO_VERSION=${REPOSADO_VERSION}
                 - MARGARITA_VERSION=${MARGARITA_VERSION}
-        image: ianharrier/margarita:${MARGARITA_VERSION}
+        image: ianharrier/applesus:2.0.0
         restart: unless-stopped
+        command: web
         ports:
             - ${WEB_PORT}:80
         environment:
@@ -21,14 +22,20 @@ services:
         volumes:
             - ./volumes/reposado/html:/srv/reposado/html:z
             - ./volumes/reposado/metadata:/srv/reposado/metadata:z
-    sync:
+    cron:
         build:
-            context: ./images/reposado
+            context: ./images/applesus
             args:
                 - REPOSADO_VERSION=${REPOSADO_VERSION}
-        image: ianharrier/reposado:${REPOSADO_VERSION}
+                - MARGARITA_VERSION=${MARGARITA_VERSION}
+        image: ianharrier/applesus:2.0.0
         restart: unless-stopped
+        command: cron
         environment:
+            - BACKUP_OPERATION=${BACKUP_OPERATION}
+            - BACKUP_CRON_EXP=${BACKUP_CRON_EXP}
+            - BACKUP_RETENTION=${BACKUP_RETENTION}
+            - HOST_PATH=${PWD}
             - BASE_URL=${WEB_BASE_URL}
             - SYNC_CRON_EXP=${SYNC_CRON_EXP}
             - PURGE_OPERATION=${PURGE_OPERATION}
@@ -37,16 +44,4 @@ services:
         volumes:
             - ./volumes/reposado/html:/srv/reposado/html:z
             - ./volumes/reposado/metadata:/srv/reposado/metadata:z
-    cron:
-        build:
-            context: ./images/cron
-        image: ianharrier/applesus-cron:1.1.1
-        restart: unless-stopped
-        environment:
-            - BACKUP_OPERATION=${BACKUP_OPERATION}
-            - BACKUP_CRON_EXP=${BACKUP_CRON_EXP}
-            - BACKUP_RETENTION=${BACKUP_RETENTION}
-            - HOST_PATH=${PWD}
-            - TIMEZONE=${TIMEZONE}
-        volumes:
             - ./:${PWD}:z

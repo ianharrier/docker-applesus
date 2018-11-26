@@ -69,7 +69,7 @@ This is more than just an Apple SUS image. Included in this repo is everything y
 1. Optionally, the first time you use Apple SUS, you can force a synchronization instead of waiting for the first scheduled synchronization to occur.
 
     ```shell
-    docker-compose exec sync reposado-sync
+    docker-compose exec cron reposado-sync
     ```
 
 2. Navigate to the admin console at `http://<Docker-host-IP>:80/admin` (or whatever port you specified in the `.env` file).

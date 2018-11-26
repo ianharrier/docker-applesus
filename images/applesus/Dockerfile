@@ -25,10 +25,43 @@ RUN set -ex \
         && rm -rf /var/lib/apt/lists/*
 
 #-------------------------------------------------------------------------------
-#  Margarita (https://github.com/jessepeterson/margarita)
+#  Cron
+#-------------------------------------------------------------------------------
+
+RUN set -ex \
+        && apt-get update && apt-get -y install \
+               cron \
+        && rm -f /etc/cron.*/* \
+        && cat /dev/null > /etc/crontab \
+        && rm -rf /var/lib/apt/lists/*
+
+#-------------------------------------------------------------------------------
+#  Reposado (https://github.com/wdas/reposado)
 #-------------------------------------------------------------------------------
 
 ARG REPOSADO_VERSION
+
+WORKDIR /usr/local/reposado
+
+RUN set -ex \
+        && apt-get update && apt-get -y install \
+               curl \
+               git \
+        && git clone https://github.com/wdas/reposado.git . \
+        && git checkout ${REPOSADO_VERSION} \
+        && mkdir -p /srv/reposado/html /srv/reposado/metadata \
+        && chgrp -R www-data /srv/reposado/html /srv/reposado/metadata \
+        && chmod -R 775 /srv/reposado/html /srv/reposado/metadata \
+        && apt-get -y purge --auto-remove \
+               git \
+        && rm -rf /var/lib/apt/lists/*
+
+COPY preferences.plist ./code/preferences.plist
+
+#-------------------------------------------------------------------------------
+#  Margarita (https://github.com/jessepeterson/margarita)
+#-------------------------------------------------------------------------------
+
 ARG MARGARITA_VERSION
 
 WORKDIR /usr/local/margarita
@@ -40,20 +73,14 @@ RUN set -ex \
         && git clone https://github.com/jessepeterson/margarita.git . \
         && git checkout ${MARGARITA_VERSION} \
         && pip install flask \
-        && git clone https://github.com/wdas/reposado.git /usr/local/reposado \
-        && git -C /usr/local/reposado checkout ${REPOSADO_VERSION} \
-        && cp -R /usr/local/reposado/code/reposadolib reposadolib \
-        && rm -rf /usr/local/reposado \
+        && ln -s /usr/local/reposado/code/reposadolib ./reposadolib \
+        && ln -s /usr/local/reposado/code/preferences.plist ./preferences.plist \
         && a2enmod rewrite ldap authnz_ldap \
-        && mkdir -p /srv/reposado/html /srv/reposado/metadata \
-        && chgrp -R www-data /srv/reposado/html /srv/reposado/metadata \
-        && chmod -R 775 /srv/reposado/html /srv/reposado/metadata \
         && apt-get -y purge --auto-remove \
                git \
                python-pip \
         && rm -rf /var/lib/apt/lists/*
 
-COPY preferences.plist ./preferences.plist
 COPY margarita.wsgi ./margarita.wsgi
 COPY margarita.conf /etc/apache2/sites-available/000-default.conf
 
@@ -62,15 +89,21 @@ RUN set -ex \
 
 EXPOSE 80
 
-CMD ["/usr/sbin/apachectl","-f","/etc/apache2/apache2.conf","-D","FOREGROUND"]
-
 #-------------------------------------------------------------------------------
 #  Scripts
 #-------------------------------------------------------------------------------
 
+WORKDIR /
+
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY app-backup.sh /usr/local/bin/app-backup
+COPY reposado-purge.sh /usr/local/bin/reposado-purge
+COPY reposado-sync.sh /usr/local/bin/reposado-sync
 
 RUN set -ex \
-        && chmod +x /usr/local/bin/docker-entrypoint
+        && chmod +x /usr/local/bin/app-backup \
+        && chmod +x /usr/local/bin/docker-entrypoint \
+        && chmod +x /usr/local/bin/reposado-purge \
+        && chmod +x /usr/local/bin/reposado-sync
 
 ENTRYPOINT ["docker-entrypoint"]
