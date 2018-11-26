@@ -12,9 +12,6 @@ fi
 echo "=== Shutting down web container. ==============================================="
 docker-compose stop web
 
-echo "=== Shutting down sync container. =============================================="
-docker-compose stop sync
-
 echo "=== Starting cron container. ==================================================="
 docker-compose up -d cron
 
